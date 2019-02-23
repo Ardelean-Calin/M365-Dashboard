@@ -6,12 +6,15 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     appState: "connecting",
-    batteryLevel: 0,
-    kmRemaining: 0,
-    kmTotal: 0,
-    kmTraveled: 0,
-    vehicleSpeed: 0,
-    vehicleTemperature: 0
+    batteryLevel: 69,
+    batteryIcon: "battery-full",
+    economyMode: false,
+    kmRemaining: 24,
+    kmTotal: 1039,
+    kmTraveled: 6,
+    vehicleSpeed: 20,
+    vehicleTemperature: 19.2,
+    vehicleLocked: false
   },
   mutations: {
     setAppState(state, appState) {
@@ -34,6 +37,13 @@ export default new Vuex.Store({
     },
     setVehicleTemperature(state, n) {
       state.vehicleTemperature = n;
+    },
+    lockUnlockVehicle(state) {
+      // TO-DO: Send lock command
+      state.vehicleLocked = !state.vehicleLocked;
+    },
+    toggleEconomyMode(state) {
+      state.economyMode = !state.economyMode;
     }
   },
   actions: {}
