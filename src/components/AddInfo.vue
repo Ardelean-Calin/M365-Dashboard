@@ -13,7 +13,12 @@
 
 <script>
 export default {
-  props: ["icon", "info", "unit", "subText"]
+  props: {
+    icon: [String, Array],
+    info: [String, Number],
+    unit: String,
+    subText: String
+  }
 };
 </script>
 

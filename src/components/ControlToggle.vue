@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="container" @click="action">
+    <div class="container"
+        :class="{btnDisabled: disabled}" @click="action">
       <font-awesome-icon
         class="icon"
         :icon="toggled ? iconTrue : iconFalse"
@@ -8,15 +9,15 @@
         fixed-width
       ></font-awesome-icon>
     </div>
-    <div class="controlText">{{ toggled ? textTrue : textFalse }}</div>
+    <div v-if="!disabled" class="controlText">{{ toggled ? textTrue : textFalse }}</div>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    iconTrue: String,
-    iconFalse: String,
+    iconTrue: [Array, String],
+    iconFalse: [Array, String],
     action: {
       type: Function,
       required: false,
@@ -28,7 +29,8 @@ export default {
       default: false
     },
     textTrue: String,
-    textFalse: String
+    textFalse: String,
+    disabled: Boolean,
   }
 };
 </script>
@@ -57,5 +59,9 @@ export default {
 .iconToggled {
   color: white;
   background: #2c3e50;
+}
+.btnDisabled {
+  background: rgba(0, 0, 0, 0.12);
+  color: rgba(0, 0, 0, 0.12);
 }
 </style>

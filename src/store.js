@@ -1,24 +1,28 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import {lockScooter, unlockScooter, enableCC, disableCC} from "@/m365.js";
 
 Vue.use(Vuex);
-
-export default new Vuex.Store({
+let store = new Vuex.Store({
   state: {
-    appState: "connecting",
-    batteryLevel: 69,
+    connected: false,
+    bluetoothDevice: null,
+    batteryLevel: 0,
     batteryIcon: "battery-full",
-    economyMode: false,
-    kmRemaining: 24,
-    kmTotal: 1039,
-    kmTraveled: 6,
-    vehicleSpeed: 20,
-    vehicleTemperature: 19.2,
+    cruiseControl: true,
+    kmRemaining: 0,
+    kmTotal: 0,
+    kmTraveled: 0,
+    vehicleSpeed: 0,
+    vehicleTemperature: null,
     vehicleLocked: false
   },
   mutations: {
-    setAppState(state, appState) {
-      state.appState = appState;
+    setConnected(state, connected) {
+      state.connected = connected;
+      if (connected == false){
+        state.bluetoothDevice = null;
+      }
     },
     setBatteryLevel(state, n) {
       state.batteryLevel = n;
@@ -27,24 +31,43 @@ export default new Vuex.Store({
       state.kmRemaining = n;
     },
     setKmTotal(state, n) {
-      state.kmTotal = n;
+      state.kmTotal = Math.round(n);
     },
     setKmTraveled(state, n) {
-      state.kmTraveled = n;
+      state.kmTraveled = Math.round(n * 10) / 10;
     },
     setVehicleSpeed(state, n) {
-      state.vehicleSpeed = n;
+      state.vehicleSpeed = Math.round(n * 10) / 10;
     },
     setVehicleTemperature(state, n) {
-      state.vehicleTemperature = n;
+      state.vehicleTemperature = Math.round(n * 10) / 10;
+    },
+    setStateLocked(state, b){
+      state.vehicleLocked = b;
     },
     lockUnlockVehicle(state) {
-      // TO-DO: Send lock command
-      state.vehicleLocked = !state.vehicleLocked;
+      if (state.vehicleLocked){
+        unlockScooter(state.bluetoothDevice)
+      } else {
+        lockScooter(state.bluetoothDevice)
+      }
     },
-    toggleEconomyMode(state) {
-      state.economyMode = !state.economyMode;
+    setStateCC(state, b){
+      state.cruiseControl = b;
+    },
+    toggleCruiseControl(state) {
+      // TO-DO: Send CC command
+      // if (state.cruiseControl){
+      //   enableCC(state.bluetoothDevice)
+      // } else {
+      //   disableCC(state.bluetoothDevice)
+      // }
+    },
+    setDevice(state, d){
+      state.bluetoothDevice = d;
     }
   },
   actions: {}
 });
+
+export default store;

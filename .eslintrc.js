@@ -8,17 +8,11 @@ module.exports = {
   extends: ["plugin:vue/essential", "@vue/standard", "@vue/prettier"],
 
   rules: {
-    'no-console': 'off',
-    'no-debugger': 'off'
+    "no-console": "off",
+    "no-debugger": "off"
   },
 
   parserOptions: {
-    parser: 'babel-eslint'
-  },
-
-  'extends': [
-    'plugin:vue/essential',
-    '@vue/standard',
-    '@vue/prettier'
-  ]
+    parser: "babel-eslint"
+  }
 };

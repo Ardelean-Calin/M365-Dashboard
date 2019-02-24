@@ -1,8 +1,12 @@
 <template>
   <div class="container">
     <!-- Status items -->
-    <div class="connection">
-      <font-awesome-icon icon="wifi" size="lg"></font-awesome-icon>
+    <div class="connection" @click="connect">
+      <font-awesome-icon
+        :icon="['fab', 'bluetooth-b']"
+        size="lg"
+        :class="{connected: isConnected}"
+      ></font-awesome-icon>
     </div>
     <div class="temperature">
       <font-awesome-icon
@@ -48,15 +52,17 @@
           iconFalse="unlock"
           textTrue="Blocat"
           textFalse="Deblocat"
+          :disabled="!this.isConnected"
           :action="() => this.$store.commit('lockUnlockVehicle')"
         />
         <ControlToggle
-          :toggled="this.$store.state.economyMode"
-          iconTrue="fire-alt"
-          iconFalse="leaf"
-          textTrue="Sport"
-          textFalse="Eco"
-          :action="() => this.$store.commit('toggleEconomyMode')"
+          :toggled="this.$store.state.cruiseControl"
+          :iconTrue="['fas', 'compass']"
+          :iconFalse="['far', 'compass']"
+          textTrue="CC pornit"
+          textFalse="CC oprit"
+          :disabled="!this.isConnected"
+          :action="() => this.$store.commit('toggleCruiseControl')"
         />
       </div>
     </div>
@@ -64,6 +70,12 @@
 </template>
 
 <script>
+import {
+  searchScooter,
+  connectScooter,
+  startNotificationListener,
+  startRequesterTimer
+} from "@/m365.js";
 import MainInfo from "@/components/MainInfo.vue";
 import AddInfo from "@/components/AddInfo.vue";
 import ControlToggle from "@/components/ControlToggle.vue";
@@ -73,6 +85,24 @@ export default {
     MainInfo,
     AddInfo,
     ControlToggle
+  },
+  computed: {
+    isConnected(){
+      return this.$store.state.connected;
+    }
+  },
+  methods: {
+    connect() {
+      let gattServer;
+      searchScooter()
+        // TO-DO: Store device in store
+        .then(device => connectScooter(device))
+        .then(server => {
+          gattServer = server;
+          return startNotificationListener(server);
+        })
+        .then(characteristic => startRequesterTimer(gattServer));
+    }
   }
 };
 </script>
@@ -123,5 +153,9 @@ export default {
   flex-wrap: wrap;
   margin-top: 3rem;
   justify-content: space-around;
+}
+
+.connected {
+  color: #2980b9;
 }
 </style>
