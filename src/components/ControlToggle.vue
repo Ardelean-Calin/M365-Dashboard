@@ -1,7 +1,10 @@
 <template>
   <div>
-    <div class="container"
-        :class="{btnDisabled: disabled}" @click="action">
+    <div
+      class="container"
+      :class="{ btnDisabled: disabled, ripple: !disabled }"
+      @click="action"
+    >
       <font-awesome-icon
         class="icon"
         :icon="toggled ? iconTrue : iconFalse"
@@ -9,7 +12,9 @@
         fixed-width
       ></font-awesome-icon>
     </div>
-    <div v-if="!disabled" class="controlText">{{ toggled ? textTrue : textFalse }}</div>
+    <div v-if="!disabled" class="controlText">
+      {{ toggled ? textTrue : textFalse }}
+    </div>
   </div>
 </template>
 
@@ -30,7 +35,7 @@ export default {
     },
     textTrue: String,
     textFalse: String,
-    disabled: Boolean,
+    disabled: Boolean
   }
 };
 </script>
@@ -63,5 +68,19 @@ export default {
 .btnDisabled {
   background: rgba(0, 0, 0, 0.12);
   color: rgba(0, 0, 0, 0.12);
+}
+
+.ripple {
+  background-position: center;
+  transition: background 0.5s ease;
+}
+.ripple:hover {
+  background: white radial-gradient(circle, transparent 1%, white 1%)
+    center/15000%;
+}
+.ripple:active {
+  background-color: rgb(179, 179, 179);
+  background-size: 100%;
+  transition: background 0s;
 }
 </style>

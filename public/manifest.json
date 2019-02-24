@@ -1,6 +1,6 @@
 {
-  "name": "m365-better-dashboard",
-  "short_name": "m365-better-dashboard",
+  "name": "M365 Dashboard",
+  "short_name": "M365",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",

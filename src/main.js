@@ -12,7 +12,7 @@ import {
   faUnlock,
   faCompass
 } from "@fortawesome/free-solid-svg-icons";
-import { faBluetoothB } from "@fortawesome/free-brands-svg-icons";
+import { faBluetoothB, faBluetooth } from "@fortawesome/free-brands-svg-icons";
 import { faCompass as farCompass } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import Vue from "vue";
@@ -26,6 +26,7 @@ library.add(faThermometerHalf);
 library.add(faBatteryFull);
 library.add(faRoad);
 library.add(faTachometerAlt);
+library.add(faBluetooth);
 library.add(faBluetoothB);
 library.add(faLock);
 library.add(faUnlock);

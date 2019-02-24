@@ -3,9 +3,9 @@
     <!-- Status items -->
     <div class="connection" @click="connect">
       <font-awesome-icon
-        :icon="['fab', 'bluetooth-b']"
+        :icon="['fab', 'bluetooth']"
         size="lg"
-        :class="{connected: isConnected}"
+        :class="{ connected: isConnected }"
       ></font-awesome-icon>
     </div>
     <div class="temperature">
@@ -70,12 +70,7 @@
 </template>
 
 <script>
-import {
-  searchScooter,
-  connectScooter,
-  startNotificationListener,
-  startRequesterTimer
-} from "@/m365.js";
+import { connectScooter } from "@/m365.js";
 import MainInfo from "@/components/MainInfo.vue";
 import AddInfo from "@/components/AddInfo.vue";
 import ControlToggle from "@/components/ControlToggle.vue";
@@ -87,21 +82,14 @@ export default {
     ControlToggle
   },
   computed: {
-    isConnected(){
+    isConnected() {
       return this.$store.state.connected;
     }
   },
   methods: {
     connect() {
-      let gattServer;
-      searchScooter()
-        // TO-DO: Store device in store
-        .then(device => connectScooter(device))
-        .then(server => {
-          gattServer = server;
-          return startNotificationListener(server);
-        })
-        .then(characteristic => startRequesterTimer(gattServer));
+      // Just connect to the scooter
+      connectScooter();
     }
   }
 };
