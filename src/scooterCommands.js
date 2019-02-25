@@ -43,7 +43,6 @@ export const GET_TEMPERATURE = Uint8Array.from([
   0x1e,
   0xff
 ]).buffer;
-
 export const GET_LOCK_STATUS = Uint8Array.from([
   0x55,
   0xaa,
@@ -64,6 +63,30 @@ export const GET_CC_STATUS = Uint8Array.from([
   0x7c,
   0x02,
   0x5d,
+  0xff
+]).buffer;
+// Uptime in seconds
+export const GET_UPTIME = Uint8Array.from([
+  0x55,
+  0xaa,
+  0x03,
+  0x20,
+  0x01,
+  0x3b,
+  0x02,
+  0x9e,
+  0xff
+]).buffer;
+// Speed in meters/hour
+export const GET_AVG_SPEED = Uint8Array.from([
+  0x55,
+  0xaa,
+  0x03,
+  0x20,
+  0x01,
+  0xb6,
+  0x02,
+  0x23,
   0xff
 ]).buffer;
 
