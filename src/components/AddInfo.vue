@@ -1,12 +1,21 @@
 <template>
   <div class="container">
-    <div class="info">
-      <font-awesome-icon class="icon" :icon="icon" size="2x" fixed-width />
-      <div class="infoValue">{{ info }}</div>
-    </div>
-    <div class="subtitle">
-      <div class="unit">{{ unit }}</div>
-      {{ subText }}
+    <div class="widget">
+      <div class="info">
+        <font-awesome-icon
+          class="icon"
+          :icon="icon"
+          :size="iconSize"
+          fixed-width
+        />
+        <div>
+          <div class="infoValue" :class="{ largeText: large }">{{ info }}</div>
+          <div class="subtitle">
+            <div v-if="unit" class="unit">{{ unit }}</div>
+            {{ subText }}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -17,7 +26,16 @@ export default {
     icon: [String, Array],
     info: [String, Number],
     unit: String,
-    subText: String
+    subText: String,
+    large: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    iconSize() {
+      return this.$props.large ? "4x" : "2x";
+    }
   }
 };
 </script>
@@ -25,21 +43,27 @@ export default {
 <style scoped>
 .container {
   display: flex;
+  justify-content: center;
+}
+.widget {
+  display: flex;
   flex-direction: column;
-  width: 5rem;
+  max-width: 10rem;
 }
 .icon {
   color: hsla(0, 0%, 45%, 1);
+  padding-right: 5px;
 }
 .info {
   display: flex;
   align-items: center;
   padding: 2px;
+  text-align: left;
 }
 .infoValue {
   font-weight: bold;
   font-size: 1.2rem;
-  margin: auto;
+  /* margin: auto; */
 }
 .unit {
   margin-left: 1px;
@@ -52,5 +76,9 @@ export default {
   justify-content: center;
   font-style: italic;
   text-align: center;
+}
+
+.largeText {
+  font-size: 1.5rem;
 }
 </style>
