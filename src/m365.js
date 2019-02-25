@@ -123,7 +123,7 @@ function handleRxMessage(event) {
   }
   // KM this session
   else if (type == 0xb9) {
-    value = (bytes[6] + bytes[7] * 256) / 10;
+    value = (bytes[6] + bytes[7] * 256) / 100;
     store.commit("setKmTraveled", value);
   }
   // Total KMs
