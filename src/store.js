@@ -65,7 +65,7 @@ let store = new Vuex.Store({
       state.avgSpeed = Math.round(n * 10) / 10;
     },
     setUptime(state, n) {
-      state.uptime = Math.ceil(n);
+      state.uptime = Math.round(n);
     },
     setVehicleTemperature(state, n) {
       state.vehicleTemperature = Math.round(n * 10) / 10;
