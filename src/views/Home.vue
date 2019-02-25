@@ -61,7 +61,7 @@
             :info="this.$store.state.uptime.toString() + 'm'"
             icon="stopwatch"
             unit=""
-            subText="durație"
+            subText="durată"
           />
         </div>
       </div>
