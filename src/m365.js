@@ -1,14 +1,24 @@
 import * as cmd from "@/scooterCommands.js";
 
 import store from "@/store.js";
-import { sleep } from "@/utils.js";
 
 const UART_SERVICE = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
 const UART_TX_CHARACTERISTIC = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
 const UART_RX_CHARACTERISTIC = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 
-// Time in ms to wait between requests
-const BLE_REQUEST_DELAY = 35;
+// List of commands to execute
+const commandList = [
+  [0xb6, cmd.GET_AVG_SPEED],
+  [0xb4, cmd.GET_BATTERY_LEVEL],
+  [0x7c, cmd.GET_CC_STATUS],
+  [0xb9, cmd.GET_KM_SESSION],
+  [0xb7, cmd.GET_KM_TOTAL],
+  [0xbb, cmd.GET_TEMPERATURE],
+  [0x3b, cmd.GET_UPTIME],
+  [0xb2, cmd.GET_LOCK_STATUS]
+];
+// Keeps track which commands were executed
+let commandListIndices = new Array(commandList.length).fill(0);
 
 // Options for device scanning. services field is necessary to be allowed to
 // access that field
@@ -68,27 +78,23 @@ export function startRequesterTimer(txChar) {
     clearInterval(refreshTimer);
   }
 
-  // Main timer that refreshes my data.
+  // Main timer that refreshes my data. Approx 3 times per second suffices.
   try {
-    refreshTimer = setInterval(
-      async characteristic => {
-        // Refresh every 250ms
-        await characteristic.writeValue(cmd.GET_BATTERY_LEVEL);
-        await sleep(BLE_REQUEST_DELAY);
-        await characteristic.writeValue(cmd.GET_KM_SESSION);
-        await sleep(BLE_REQUEST_DELAY);
-        await characteristic.writeValue(cmd.GET_KM_TOTAL);
-        await sleep(BLE_REQUEST_DELAY);
-        await characteristic.writeValue(cmd.GET_TEMPERATURE);
-        await sleep(BLE_REQUEST_DELAY);
-        await characteristic.writeValue(cmd.GET_LOCK_STATUS);
-        await sleep(BLE_REQUEST_DELAY);
-        await characteristic.writeValue(cmd.GET_CC_STATUS);
-        await sleep(BLE_REQUEST_DELAY);
-      },
-      350,
-      txChar
-    );
+    refreshTimer = setInterval(async function() {
+      let sentItem = false;
+      // Keep sending same command until I get an answer.
+      for (let index = 0; index < commandList.length; index++) {
+        const command = commandList[index][1];
+        const flag = commandListIndices[index];
+        if (flag) continue;
+
+        await txChar.writeValue(command);
+        sentItem = true;
+      }
+      // Once I got through every command, clear array and repeat
+      if (sentItem == false)
+        commandListIndices = new Array(commandList.length).fill(0);
+    }, 300);
   } catch (error) {
     clearInterval(refreshTimer);
     store.commit("setConnected", false);
@@ -148,6 +154,22 @@ function handleRxMessage(event) {
     value = Boolean(bytes[6]);
     store.commit("setStateCC", value);
   }
+  // Average speed
+  else if (type == 0xb6) {
+    value = (bytes[6] + bytes[7] * 256) / 1000;
+    store.commit("setAvgSpeed", value);
+  }
+  // Uptime
+  else if (type == 0x3b) {
+    // Uptime in seconds. Convert it to minutes for now.
+    // TODO: Convert to nicer format eg. 1h39m
+    value = (bytes[6] + bytes[7] * 256) / 60;
+    store.commit("setUptime", value);
+  }
+
+  // Announce that this command was executed
+  const commandIndex = commandList.findIndex(cmd => cmd[0] == type);
+  commandListIndices[commandIndex] = 1;
 }
 
 // Executed when bluetooth connection is lost.

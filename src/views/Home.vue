@@ -22,26 +22,46 @@
     <div class="home">
       <div class="information">
         <MainInfo :mainInfo="this.$store.state.kmRemaining" />
-        <div class="additionalInfo">
+        <div class="importantInfo">
           <AddInfo
+            class="flexItem"
             :icon="this.$store.state.batteryIcon"
             :info="this.$store.state.batteryLevel"
             unit="%"
             subText="baterie"
+            large
           />
-          <div class="divider"></div>
+
           <AddInfo
-            icon="road"
+            class="flexItem"
+            :info="this.$store.state.avgSpeed"
+            icon="tachometer-alt"
+            unit="km/h"
+            subText=""
+            large
+          />
+        </div>
+        <div class="additionalInfo">
+          <AddInfo
+            class="flexItem"
+            :icon="['far', 'flag']"
             :info="this.$store.state.kmTraveled"
             unit="km"
-            subText="parcurși"
+            subText="cursă"
           />
-          <div class="divider"></div>
           <AddInfo
+            class="flexItem"
             :info="this.$store.state.kmTotal"
-            icon="tachometer-alt"
+            icon="road"
             unit="km"
             subText="total"
+          />
+          <AddInfo
+            class="flexItem"
+            :info="this.$store.state.uptime.toString() + 'm'"
+            icon="stopwatch"
+            unit=""
+            subText="durație"
           />
         </div>
       </div>
@@ -137,11 +157,22 @@ export default {
   align-content: center;
   justify-content: center;
 }
+.importantInfo {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+}
+
 .additionalInfo {
   display: flex;
   flex-wrap: wrap;
   margin-top: 3rem;
-  justify-content: space-around;
+  justify-content: center;
+  align-content: space-between;
+}
+
+.flexItem {
+  flex-basis: 33%;
 }
 
 .connected {

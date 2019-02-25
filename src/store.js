@@ -10,6 +10,7 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 let store = new Vuex.Store({
   state: {
+    avgSpeed: 0,
     batteryIcon: "battery-full",
     batteryLevel: 0,
     gattServer: null,
@@ -21,6 +22,7 @@ let store = new Vuex.Store({
     kmTraveled: 0,
     rxCharacteristic: null,
     txCharacteristic: null,
+    uptime: 0,
     vehicleLocked: false,
     vehicleSpeed: 0,
     vehicleTemperature: null
@@ -59,8 +61,11 @@ let store = new Vuex.Store({
     setKmTraveled(state, n) {
       state.kmTraveled = Math.round(n * 10) / 10;
     },
-    setVehicleSpeed(state, n) {
-      state.vehicleSpeed = Math.round(n * 10) / 10;
+    setAvgSpeed(state, n) {
+      state.avgSpeed = Math.round(n * 10) / 10;
+    },
+    setUptime(state, n) {
+      state.uptime = Math.ceil(n);
     },
     setVehicleTemperature(state, n) {
       state.vehicleTemperature = Math.round(n * 10) / 10;
