@@ -4,6 +4,7 @@ import {
   CMD_ENABLE_CC,
   CMD_DISABLE_CC
 } from "@/scooterCommands.js";
+import { lockScooter, unlockScooter } from "@/m365.js";
 import Vue from "vue";
 import Vuex from "vuex";
 
@@ -75,9 +76,9 @@ let store = new Vuex.Store({
     },
     lockUnlockVehicle(state) {
       if (state.vehicleLocked) {
-        state.txCharacteristic.writeValue(CMD_UNLOCK_SCOOTER);
+        unlockScooter(state.txCharacteristic);
       } else {
-        state.txCharacteristic.writeValue(CMD_LOCK_SCOOTER);
+        lockScooter(state.txCharacteristic);
       }
     },
     setStateCC(state, b) {

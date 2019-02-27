@@ -172,6 +172,24 @@ function handleRxMessage(event) {
   commandListIndices[commandIndex] = 1;
 }
 
+// Locks the scooter and immediately updates.
+export async function lockScooter(txChar) {
+  await txChar.writeValue(cmd.CMD_LOCK_SCOOTER);
+
+  const commandIndex = commandList.findIndex(cmd => cmd[0] == 0xb2);
+  commandListIndices = new Array(commandList.length).fill(1);
+  commandListIndices[commandIndex] = 1;
+}
+
+// Unlocks the scooter and immediately updates.
+export async function unlockScooter(txChar) {
+  await txChar.writeValue(cmd.CMD_UNLOCK_SCOOTER);
+
+  const commandIndex = commandList.findIndex(cmd => cmd[0] == 0xb2);
+  commandListIndices = new Array(commandList.length).fill(1);
+  commandListIndices[commandIndex] = 1;
+}
+
 // Executed when bluetooth connection is lost.
 function onDisconnected(event) {
   if (refreshTimer != null) clearInterval(refreshTimer);
